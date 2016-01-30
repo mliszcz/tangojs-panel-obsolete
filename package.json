@@ -1,0 +1,38 @@
+{
+  "name": "tangojs-panel",
+  "version": "0.1.0",
+  "description": "Synoptic panel built with tangojs.",
+  "author": "mliszcz <liszcz.michal@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mliszcz/tangojs-panel.git"
+  },
+  "keywords": [
+    "tangojs",
+    "tango"
+  ],
+  "bugs": {
+    "url": "https://github.com/mliszcz/tangojs-panel/issues"
+  },
+  "homepage": "https://github.com/mliszcz/tangojs-panel#readme",
+  "dependencies": {
+    "bootstrap": "4.0.0-alpha.2",
+    "grid-list-dom": "^0.1.0",
+    "html-imports-firefox-patch": "github:mliszcz/html-imports-firefox-patch",
+    "jquery": "^2.1.0",
+    "material-design-icons": "^2.1.0",
+    "tangojs": "^0.2.0",
+    "tangojs-connector-local": "^0.2.0",
+    "tangojs-web-components": "git+ssh://git@github.com/mliszcz/tangojs-web-components.git#master",
+    "webcomponents.js": "^0.7.20"
+  },
+  "devDependencies": {
+    "http-server": "^0.9.0"
+  }
+}

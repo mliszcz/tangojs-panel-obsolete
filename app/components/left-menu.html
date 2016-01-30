@@ -1,0 +1,77 @@
+<html>
+
+  <style>
+
+    .tjp-left-menu {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tjp-left-menu footer {
+      margin-top: auto;
+      margin-bottom: 2rem;
+    }
+
+    .tjp-left-menu footer small {
+      display: block;
+    }
+
+  </style>
+
+  <template>
+
+    <nav>
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Device Tree</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">New dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Import dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Preferences</a>
+        </li>
+      </ul>
+    </nav>
+
+    <footer>
+      <small>Made with ❤ by Michal Liszcz</small>
+      <small>Powered by
+        <a href="https://tangojs.github.io">tangojs</a>
+      </small>
+    </footer>
+
+  </template>
+
+  <script>
+  (function (window) {
+    'use strict'
+
+    const document = window.document
+
+    const template = window.tjp.util
+      .getCurrentDocument(window)
+      .querySelector('template')
+
+    class TjpLeftMenuElement extends window.HTMLDivElement {
+
+      createdCallback () {
+
+        this.classList.add('tjp-left-menu')
+
+        const clone = document.importNode(template.content, true)
+        this.appendChild(clone)
+      }
+    }
+
+    window.tjp.util.registerInheritedComponent(TjpLeftMenuElement,
+                                               'tjp-left-menu',
+                                               'div')
+
+  })(window)
+  </script>
+
+</html>

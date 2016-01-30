@@ -1,0 +1,101 @@
+<html>
+  <script>
+  (function (window) {
+    'use strict'
+
+    const document = window.document
+
+    const DEMO_LAYOUT = [
+      {w: 1, h: 1, x: 0, y: 0},
+      {w: 1, h: 2, x: 0, y: 1},
+      {w: 2, h: 2, x: 1, y: 0},
+      {w: 1, h: 1, x: 1, y: 2},
+      {w: 2, h: 1, x: 2, y: 2},
+      {w: 1, h: 1, x: 3, y: 0},
+      {w: 1, h: 1, x: 3, y: 1},
+      {w: 1, h: 1, x: 4, y: 0},
+      {w: 3, h: 1, x: 5, y: 0},
+      {w: 2, h: 1, x: 5, y: 1},
+      {w: 1, h: 1, x: 5, y: 2},
+      {w: 2, h: 1, x: 6, y: 2},
+      {w: 1, h: 1, x: 7, y: 1},
+      {w: 2, h: 1, x: 8, y: 0},
+      {w: 1, h: 1, x: 10, y: 0},
+      {w: 1, h: 1, x: 10, y: 1},
+      {w: 1, h: 1, x: 10, y: 2}
+    ]
+
+    function createItem (content) {
+
+      const h4 = document.createElement('h4')
+      h4.classList.add('card-title')
+      h4.textContent = content
+
+      const p = document.createElement('p')
+      p.classList.add('card-text')
+      p.textContent = content
+
+      const card = document.createElement('div')
+      card.classList.add('card')
+      card.classList.add('card-block')
+      card.appendChild(h4)
+      card.appendChild(p)
+      card.draggable = true
+
+      return card
+    }
+
+    class TjpAppElement extends window.HTMLDivElement {
+
+      createdCallback () {
+        // called BEFORE its children are initialized (in Chrome)
+      }
+
+      /** @public */
+      initialize () {
+
+        const tabNavs = document.querySelector('.tjp-tabs')
+        const tabPanes = document.querySelector('.tjp-main')
+
+        const keys = [1, 2, 3].map(idx => {
+
+          const key = `db${idx}`
+          const name = `Dashboard #${idx}`
+
+          const dashboard = document.createElement('x-grid-list')
+          dashboard.setAttribute('direction', 'horizontal')
+          dashboard.setAttribute('lanes', '5')
+
+          window.addEventListener('resize', dashboard.grid.onGridContainerResize)
+          window.addEventListener('DOMContentLoaded', dashboard.grid.onGridContainerResize)
+
+          tabNavs.appendTab(key, name)
+          tabPanes.appendContent(key, dashboard)
+
+          DEMO_LAYOUT.forEach(pos => {
+            const div = createItem(JSON.stringify(pos))
+            dashboard.appendGridElement(div, pos)
+          })
+
+          return key
+        })
+
+        tabNavs.addEventListener('tjp-click', (event) => {
+          const tab = tabPanes.getContent(event.detail.key)
+          if (tab) {
+            tab.getElementsByTagName('x-grid-list')[0].grid
+              .onGridContainerResize()
+          }
+        })
+
+        tabNavs.showFirst()
+      }
+    }
+
+    window.tjp.util.registerInheritedComponent(TjpAppElement,
+                                               'tjp-app',
+                                               'div')
+
+  })(window)
+  </script>
+</html>

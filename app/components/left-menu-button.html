@@ -1,0 +1,37 @@
+<html>
+
+  <template>
+    <i class="material-icons">menu</i>
+  </template>
+
+  <script>
+  (function (window) {
+    'use strict'
+
+    const document = window.document
+
+    const template = window.tjp.util
+      .getCurrentDocument(window)
+      .querySelector('template')
+
+    class TjpLeftMenuButtonElement extends window.HTMLButtonElement {
+
+      createdCallback () {
+
+        const clone = document.importNode(template.content, true)
+        this.appendChild(clone)
+
+        this.addEventListener('click', function () {
+          this.classList.toggle('tjp-bttn-active')
+        })
+      }
+    }
+
+    window.tjp.util.registerInheritedComponent(TjpLeftMenuButtonElement,
+                                               'tjp-left-menu-button',
+                                               'button')
+
+  })(window)
+  </script>
+
+</html>

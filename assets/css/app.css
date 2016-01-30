@@ -1,0 +1,131 @@
+
+/******************************************************************************
+ * root elements
+ */
+
+.tjp-root {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-rows: auto auto 1fr;
+}
+
+.tjp-button {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 1;
+}
+
+.tjp-logo {
+  grid-column: 2 / span 1;
+  grid-row: 1 / span 1;
+}
+
+.tjp-menu {
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 2;
+}
+
+.tjp-tabs {
+  grid-column: 3 / span 1;
+  grid-row: 1 / span 1;
+}
+
+.tjp-tool {
+  grid-column: 3 / span 1;
+  grid-row: 2 / span 1;
+}
+
+.tjp-main {
+  grid-column: 3 / span 1;
+  grid-row: 3 / span 1;
+}
+
+/******************************************************************************
+ * toggle button
+ */
+
+.tjp-toggleable {
+  width: 0px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tjp-bttn-active ~ .tjp-toggleable {
+  width: 200px;
+}
+
+/******************************************************************************
+ * misc. - layout
+ */
+
+
+html, body, .tjp-root {
+   /* Viewport includes scrollbar, percent size does not.
+    * note: calc(100%) wont work here! */
+  height: calc(100vh - (100vh - 100%));
+  margin: 0;
+  padding: 0;
+}
+
+.tjp-main {
+  /* main occupies cell 1fr x 1fr */
+  position: relative;
+}
+
+.tjp-main > div,
+x-grid-list {
+  /* absolutely position main's children to fill up all the space */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/******************************************************************************
+ * misc. - style
+ */
+
+.tjp-logo {
+  font-size: 1rem;
+}
+
+.tjp-tool {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+.tjp-bttn {
+  margin-right: .5rem;
+}
+
+.card {
+  /*display: block;*/
+  margin: 0;
+
+  /*overflow: hidden;*/
+  white-space: normal;
+  word-break: break-all;
+}
+
+.gld--grid-cell {
+  border-radius: 0.25rem;
+  border: none;
+}
+
+.gld--grid-item-dragging {
+  opacity: 0.8;
+  border: 3px dashed #373a3c;
+}
+
+x-grid-list *[draggable] {
+  user-select: none;
+  cursor: pointer;
+}
+
+x-grid-list {
+  display: grid;
+  grid-auto-columns: 200px;
+  grid-auto-rows: 200px;
+  grid-gap: 10px;
+}
