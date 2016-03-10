@@ -6,10 +6,11 @@
 .tjp-root {
   display: grid;
   grid-template-columns: auto auto 1fr;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto 1fr auto;
   grid-template-areas: "bttn logo tabs"
                        ".... menu tool"
                        ".... menu main"
+                       ".... foot main";
 }
 
 .tjp-bttn {
@@ -36,6 +37,10 @@
   grid-area: main;
 }
 
+.tjp-foot {
+  grid-area: foot;
+}
+
 /******************************************************************************
  * toggle button
  */
@@ -48,7 +53,7 @@
 }
 
 .tjp-bttn-active ~ .tjp-toggleable {
-  width: 200px;
+  width: 220px;
 }
 
 /******************************************************************************
@@ -96,11 +101,16 @@ x-grid-list {
   margin-right: .5rem;
 }
 
-.card {
-  /*display: block;*/
-  margin: 0;
+.tjp-foot {
+  margin-bottom: 2rem;
+}
 
-  /*overflow: hidden;*/
+.tjp-foot > * {
+  display: block;
+}
+
+.card {
+  margin: 0;
   white-space: normal;
   word-break: break-all;
 }
