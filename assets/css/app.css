@@ -7,36 +7,33 @@
   display: grid;
   grid-template-columns: auto auto 1fr;
   grid-template-rows: auto auto 1fr;
+  grid-template-areas: "bttn logo tabs"
+                       ".... menu tool"
+                       ".... menu main"
 }
 
-.tjp-button {
-  grid-column: 1 / span 1;
-  grid-row: 1 / span 1;
+.tjp-bttn {
+  grid-area: bttn;
 }
 
 .tjp-logo {
-  grid-column: 2 / span 1;
-  grid-row: 1 / span 1;
+  grid-area: logo;
 }
 
 .tjp-menu {
-  grid-column: 2 / span 1;
-  grid-row: 2 / span 2;
+  grid-area: menu;
 }
 
 .tjp-tabs {
-  grid-column: 3 / span 1;
-  grid-row: 1 / span 1;
+  grid-area: tabs;
 }
 
 .tjp-tool {
-  grid-column: 3 / span 1;
-  grid-row: 2 / span 1;
+  grid-area: tool;
 }
 
 .tjp-main {
-  grid-column: 3 / span 1;
-  grid-row: 3 / span 1;
+  grid-area: main;
 }
 
 /******************************************************************************
@@ -87,7 +84,7 @@ x-grid-list {
  */
 
 .tjp-logo {
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 .tjp-tool {
