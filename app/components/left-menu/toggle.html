@@ -14,7 +14,7 @@
       .getCurrentDocument(window)
       .querySelector('template')
 
-    class TjpLeftMenuButtonElement extends window.HTMLButtonElement {
+    class TjpLeftMenuToggleElement extends window.HTMLButtonElement {
 
       createdCallback () {
 
@@ -27,8 +27,8 @@
       }
     }
 
-    window.tjp.util.registerInheritedComponent(TjpLeftMenuButtonElement,
-                                               'tjp-left-menu-button',
+    window.tjp.util.registerInheritedComponent(TjpLeftMenuToggleElement,
+                                               'tjp-left-menu-toggle',
                                                'button')
 
   })(window)

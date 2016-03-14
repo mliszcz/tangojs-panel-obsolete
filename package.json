@@ -30,6 +30,7 @@
     "tangojs": "^0.2.0",
     "tangojs-connector-local": "^0.2.0",
     "tangojs-web-components": "git+ssh://git@github.com/mliszcz/tangojs-web-components.git#master",
+    "tether": "^1.2.0",
     "webcomponents.js": "^0.7.20"
   },
   "devDependencies": {

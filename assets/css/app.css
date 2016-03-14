@@ -47,13 +47,19 @@
 
 .tjp-toggleable {
   width: 0px;
-  transition: width 0.3s ease;
+  padding-right: .1rem;
+  padding-left: .1rem;
+  transition: all 0.3s ease;
   overflow: hidden;
   white-space: nowrap;
+  visibility: hidden;
 }
 
 .tjp-bttn-active ~ .tjp-toggleable {
-  width: 220px;
+  width: 320px;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  visibility: visible;
 }
 
 /******************************************************************************
@@ -97,10 +103,6 @@ x-grid-list {
   margin-bottom: .5rem;
 }
 
-.tjp-bttn {
-  margin-right: .5rem;
-}
-
 .tjp-foot {
   margin-bottom: 2rem;
 }
@@ -135,4 +137,37 @@ x-grid-list {
   grid-auto-columns: 200px;
   grid-auto-rows: 200px;
   grid-gap: 10px;
+}
+
+/******************************************************************************
+ * tangoj widgets
+ */
+
+tangojs-device-tree /deep/ .treeview input.control-button ~ label:before {
+
+  content: 'expand_more';
+  width: 0;
+  height: 0;
+  position: absolute;
+  margin-left: calc(-1 * var(--list-padding));
+  color: #373a3c;
+
+  /* taken from material-icons.css */
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+tangojs-device-tree /deep/ .treeview input.control-button:checked ~ label:before {
+  content: 'chevron_right'
 }

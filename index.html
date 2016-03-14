@@ -15,19 +15,26 @@
     <script src="node_modules/moment/min/moment.min.js"></script>
     <script src="node_modules/chart.js/Chart.min.js"></script>
 
-    <!-- jQuery for Bootstrap -->
+    <!-- dependencies for Bootstrap -->
     <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/tether/dist/js/tether.min.js"></script>
 
     <link rel="stylesheet" href="node_modules/material-design-icons/iconfont/material-icons.css">
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
+    <script src="node_modules/tangojs/lib/tangojs.js"></script>
+    <script src="node_modules/tangojs-connector-local/lib/tangojs-connector-local.js"></script>
+    <script src="node_modules/tangojs-connector-local/lib/tangojs-demo-model.js"></script>
+
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-device-tree.html">
+
     <script type="text/javascript" src="app/app-common.js"></script>
 
     <link rel="import" href="node_modules/grid-list-dom/dist/x-grid-list.html">
-    <link rel="import" href="app/components/left-menu-button.html">
-    <link rel="import" href="app/components/left-menu.html">
+    <link rel="import" href="app/components/left-menu/toggle.html">
+    <link rel="import" href="app/components/left-menu/menu.html">
     <link rel="import" href="app/components/tabs-bar.html">
     <link rel="import" href="app/components/tabs-content.html">
     <link rel="import" href="app/components/toolbar.html">
@@ -35,13 +42,22 @@
 
     <link rel="stylesheet" href="assets/css/app.css">
 
+    <script type="text/javascript">
+      (function (window) {
+        'use strict'
+        const model = window.demoModel.createModel()
+        const conn = new window.tangojsConnectorLocal.LocalConnector(model)
+        window.tangojs.setConnector(conn)
+      })(window)
+    </script>
+
   </head>
 
   <body >
 
     <div is="tjp-app" class="tjp-root">
 
-      <button is="tjp-left-menu-button" class="tjp-bttn btn btn-secondary"></button>
+      <button is="tjp-left-menu-toggle" class="tjp-bttn btn btn-secondary"></button>
 
       <header class="tjp-logo tjp-toggleable">
         TangoJS Panel
