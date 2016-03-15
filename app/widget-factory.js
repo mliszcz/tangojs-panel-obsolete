@@ -3,6 +3,9 @@
 
   const document = window.document
 
+  // TODO these descriptors should be definied on each widget
+  // in tangojs-web-components
+
   const widgetDescriptors = {
     'tangojs-label': {
       description: 'Simple field for read-onlyattributes.',
@@ -14,7 +17,23 @@
       attributes: {
         'poll-period': {
           description: 'Device pooling period',
-          value: '1000'
+          type: 'number',
+          value: 1000
+        },
+        'show-name': {
+          description: 'Show attribute name',
+          type: 'boolean',
+          value: true
+        },
+        'show-unit': {
+          description: 'Show attribute unit',
+          type: 'boolean',
+          value: true
+        },
+        'show-quality': {
+          description: 'Show attribute quality',
+          type: 'boolean',
+          value: true
         }
       }
     },
@@ -28,7 +47,23 @@
       attributes: {
         'poll-period': {
           description: 'Device pooling period',
-          value: '1000'
+          type: 'number',
+          value: 1000
+        },
+        'show-name': {
+          description: 'Show attribute name',
+          type: 'boolean',
+          value: true
+        },
+        'show-unit': {
+          description: 'Show attribute unit',
+          type: 'boolean',
+          value: true
+        },
+        'show-quality': {
+          description: 'Show attribute quality',
+          type: 'boolean',
+          value: true
         }
       }
     },
@@ -39,7 +74,13 @@
       allowCommands: true,
       allowStatus: false,
       allowReadOnly: false,
-      attributes: {}
+      attributes: {
+        'parameters': {
+          description: 'Parameters passed to the deivce',
+          value: 'string',
+          value: undefined
+        }
+      }
     },
     'tangojs-state-led': {
       description: 'Visualizes device state and status.',
@@ -51,7 +92,18 @@
       attributes: {
         'poll-period': {
           description: 'Device pooling period',
-          value: '1000'
+          type: 'number',
+          value: 1000
+        },
+        'show-name': {
+          description: 'Show device name',
+          type: 'boolean',
+          value: true
+        },
+        'show-led': {
+          description: 'Show state led',
+          type: 'boolean',
+          value: true
         }
       }
     },
@@ -65,8 +117,14 @@
       attributes: {
         'poll-period': {
           description: 'Device pooling period',
-          value: '1000'
-        }
+          type: 'number',
+          value: 1000
+        },
+        'data-limit': {
+          description: 'Max. no. of entries',
+          type: 'number',
+          value: 20
+        },
       }
     },
     'tangojs-form': {
@@ -79,7 +137,8 @@
       attributes: {
         'poll-period': {
           description: 'Device pooling period',
-          value: '1000'
+          type: 'number',
+          value: 1000
         }
       }
     }
@@ -120,6 +179,33 @@
         }
         return result
       }, {})
+    },
+
+    buildWidget: function (tag, modelArray, attributes) {
+
+      const widget = document.createElement(tag)
+
+      if (widgetDescriptors[tag].allowMultipleModels) {
+        widget.model = modelArray
+      } else {
+        widget.setAttribute('model', modelArray[0])
+      }
+
+      Object.keys(attributes).forEach(key => {
+
+        const attribute = attributes[key]
+        const type = attribute.type
+
+        if (type == 'string') {
+          widget.setAttribute(key, attribute.value)
+        } else if (type == 'number') {
+          widget.setAttribute(key, attribute.value)
+        } else if (type == 'boolean' && attribute.value) {
+          widget.setAttribute(key, '')
+        }
+      })
+
+      return widget
     }
   }
 

@@ -140,12 +140,33 @@
           btnAddWidget.disabled = disable
         }
 
+        const extractModel = (treeEntry) => {
+          const path = treeEntry.path
+          // console.log('EXTRACTING', path)
+          if (path[path.length-1] == 'status') {
+            const newPath = path.slice()
+            newPath.length = path.length-1
+            // console.log('returning', newPath)
+            return newPath
+          } else {
+            const newPath = path.slice()
+            newPath[path.length-2] = path[path.length-1]
+            newPath.length = path.length-1
+            return newPath
+          }
+        }
+
         disableButtons(true)
 
         btnClearTree.addEventListener('click', () => tree.clearSelections())
 
         btnAddWidget.addEventListener('click', (event) => {
-          const modelData = tree.getSelections().map(x => x.value)
+          const modelData = tree.getSelections().map(x => {
+            return {
+              model: extractModel(x).join('/'),
+              data: x.value
+            }
+          })
           const ev = new CreateWidgetRequestEvent(modelData)
           tree.clearSelections()
           disableButtons(true)

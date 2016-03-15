@@ -103,27 +103,72 @@
 
         // resize grid when tab becomes active
         this.dom.tabNavs.addEventListener('tjp-click', (event) => {
+
+          // TODO use dedicated bootstrap event
           const tab = this.dom.tabPanes.getContent(event.detail.key)
+
           if (tab) {
-            tab.getElementsByTagName('x-grid-list')[0].grid
-              .onGridContainerResize()
+            this.currentDashboard = tab.getElementsByTagName('x-grid-list')[0]
+          } else {
+            this.currentDashboard = undefined
+          }
+
+          if (this.currentDashboard) {
+            this.currentDashboard.grid.onGridContainerResize()
           }
         })
-      }
 
-      setupWidgetSelectorEvents () {
-
+        this.currentDashboard =
+          this.dom.tabPanes.getFirst().getElementsByTagName('x-grid-list')[0]
       }
 
       showWidgetSelector (modelData) {
 
+        const datas = modelData.map(x => x.data)
+        const models = modelData.map(x => x.model)
+
         const availableWidgets =
-          this.widgetFactory.getAvailableWidgetsDescriptors(modelData)
+          this.widgetFactory.getAvailableWidgetsDescriptors(datas)
 
         this.dom.widgetSelector
           .showModal(availableWidgets)
           .then(([tag, descriptor]) => {
-            console.log('creating widget', tag)
+
+            if (! this.currentDashboard) {
+              return
+            }
+
+            const widget = this.widgetFactory.buildWidget(
+              tag,
+              models,
+              descriptor.attributes)
+
+            // TODO move sizes to widget descriptors
+            let width = 5
+            let height = 1
+            if (tag == 'tangojs-trend') {
+              height = 4
+            } else if (tag == 'tangojs-form') {
+              height = Math.ceil(models.length/2)
+            } else if (tag == 'tangojs-command-button') {
+              width = 2
+
+              const model0 = models[0].split('/')
+              widget.innerText = model0[model0.length-1]
+            }
+
+            const card = document.createElement('div')
+            card.classList.add('card')
+            card.classList.add('card-block')
+            card.draggable = true
+            card.appendChild(widget)
+
+            this.currentDashboard.appendGridElement(card, {
+              x: 99,
+              y: 99,
+              w: width,
+              h: height
+            })
           })
       }
     }

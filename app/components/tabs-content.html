@@ -35,6 +35,9 @@
         return this.tabs[key]
       }
 
+      getFirst () {
+        return this.tabs[Object.keys(this.tabs)[0]]
+      }
     }
 
     window.tjp.util.registerInheritedComponent(TjpTabsContentElement,
