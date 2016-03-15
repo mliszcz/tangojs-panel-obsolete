@@ -112,6 +112,18 @@
       .getCurrentDocument(window)
       .querySelector('template')
 
+    class CreateWidgetRequestEvent extends window.CustomEvent {
+
+      /**
+       * @param {Array<Object>} modelData
+       */
+      constructor (modelData) {
+        super('create-widget', {
+          detail: {modelData}
+        })
+      }
+    }
+
     class TjpLeftMenuElement extends window.HTMLDivElement {
 
       createdCallback () {
@@ -133,7 +145,11 @@
         btnClearTree.addEventListener('click', () => tree.clearSelections())
 
         btnAddWidget.addEventListener('click', (event) => {
-          console.log('adding', tree.getSelections())
+          const modelData = tree.getSelections().map(x => x.value)
+          const ev = new CreateWidgetRequestEvent(modelData)
+          tree.clearSelections()
+          disableButtons(true)
+          this.dispatchEvent(ev)
         })
 
         btnReloadTree.addEventListener('click', () => {
@@ -143,7 +159,6 @@
 
         tree.addEventListener('selected', (event) => {
           disableButtons(event.detail.selections.length < 1)
-          console.log(event.detail.selections)
         })
       }
     }

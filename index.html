@@ -31,8 +31,10 @@
     <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-device-tree.html">
 
     <script type="text/javascript" src="app/app-common.js"></script>
+    <script type="text/javascript" src="app/widget-factory.js"></script>
 
     <link rel="import" href="node_modules/grid-list-dom/dist/x-grid-list.html">
+    <link rel="import" href="app/components/widget-selector.html">
     <link rel="import" href="app/components/left-menu/toggle.html">
     <link rel="import" href="app/components/left-menu/menu.html">
     <link rel="import" href="app/components/tabs-bar.html">
@@ -77,6 +79,13 @@
           <a href="https://tangojs.github.io">tangojs</a>
         </small>
       </footer>
+
+      <div is="tjp-widget-selector"
+           id="widget-selector"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog">
+      </div>
 
     </div>
 

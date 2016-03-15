@@ -1,0 +1,151 @@
+<html>
+
+  <template>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Add widget</h4>
+        </div>
+
+        <div class="modal-body">
+
+          <form>
+            <div class="form-group row">
+              <label class="col-sm-2">Type</label>
+              <div class="col-sm-10">
+              </div>
+            </div>
+          </form>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">
+            Create
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </template>
+
+  <script>
+  (function (window) {
+    'use strict'
+
+    const document = window.document
+
+    const template = window.tjp.util
+      .getCurrentDocument(window)
+      .querySelector('template')
+
+    class TjpWidgetSelectorElement extends window.HTMLDivElement {
+
+      createdCallback () {
+        const clone = document.importNode(template.content, true)
+        this.appendChild(clone)
+
+        this.dom = {
+          cancelButton: this.querySelector('.modal-footer button:nth-child(1)'),
+          createButton: this.querySelector('.modal-footer button:nth-child(2)'),
+          radioContainer: this.querySelector('.form-group > div'),
+          form: this.querySelector('.modal-body > form')
+        }
+      }
+
+      createWidgetEntry (tag, descriptor) {
+
+        const div = document.createElement('div')
+        div.classList.add('radio')
+
+        const label = document.createElement('label')
+
+        const input = document.createElement('input')
+        input.setAttribute('type', 'radio')
+        input.setAttribute('name', 'widget')
+        input.setAttribute('value', tag)
+
+        const span = document.createElement('strong')
+        span.innerText = tag
+
+        const p = document.createElement('p')
+        p.innerText = descriptor.description
+
+        div.appendChild(label)
+        div.appendChild(p)
+        label.appendChild(input)
+        label.appendChild(span)
+
+        return div
+      }
+
+      displayAvailableWidgetsForm (availableWidgets) {
+        const ct = this.dom.radioContainer
+        while (ct.hasChildNodes()) {
+          ct.removeChild(ct.firstChild)
+        }
+        Object.keys(availableWidgets).forEach(tag => {
+          ct.appendChild(this.createWidgetEntry(tag, availableWidgets[tag]))
+        })
+        const first = ct.querySelector('input[type="radio"]')
+        if (first) {
+          first.checked = true
+          this.dom.createButton.disabled = false
+        } else {
+          this.dom.createButton.disabled = true
+        }
+      }
+
+      /**
+       * @param {Array<Object>} availableWidgets
+       * @return {Promise<[string, Object]>}
+       */
+      showModal (availableWidgets) {
+        this.displayAvailableWidgetsForm(availableWidgets)
+        return new Promise((resolve, reject) => {
+
+          let cancelListener
+          let createListener
+
+          const removeEventListeners = () => {
+            this.dom.cancelButton.removeEventListener('click', cancelListener)
+            this.dom.createButton.removeEventListener('click', createListener)
+          }
+
+          cancelListener = () => {
+            removeEventListeners()
+            // http://stackoverflow.com/questions/20068467/do-never-resolved-promises-cause-memory-leak
+          }
+
+          createListener = () => {
+            removeEventListeners()
+
+            const tag = this.dom.form['widget'].value
+            resolve([tag, availableWidgets[tag]])
+          }
+
+          this.dom.cancelButton.addEventListener('click', cancelListener)
+          this.dom.createButton.addEventListener('click', createListener)
+
+          $(this).modal()
+        })
+      }
+
+
+    }
+
+    window.tjp.util.registerInheritedComponent(TjpWidgetSelectorElement,
+                                               'tjp-widget-selector',
+                                               'div')
+
+  })(window)
+  </script>
+
+</html>

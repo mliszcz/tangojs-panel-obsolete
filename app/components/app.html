@@ -29,11 +29,12 @@
 
       const h4 = document.createElement('h4')
       h4.classList.add('card-title')
-      h4.textContent = content
+      // h4.textContent = content
 
       const p = document.createElement('p')
       p.classList.add('card-text')
-      p.textContent = content
+      // p.textContent = content
+      p.textContent = 'x'
 
       const card = document.createElement('div')
       card.classList.add('card')
@@ -51,12 +52,7 @@
         // called BEFORE its children are initialized (in Chrome)
       }
 
-      /** @public */
-      initialize () {
-
-        const tabNavs = document.querySelector('.tjp-tabs')
-        const tabPanes = document.querySelector('.tjp-main')
-
+      createDemoDashboards () {
         const keys = [1, 2, 3].map(idx => {
 
           const key = `db${idx}`
@@ -66,11 +62,12 @@
           dashboard.setAttribute('direction', 'horizontal')
           dashboard.setAttribute('lanes', '5')
 
-          window.addEventListener('resize', dashboard.grid.onGridContainerResize)
-          window.addEventListener('DOMContentLoaded', dashboard.grid.onGridContainerResize)
+          const onResize = dashboard.grid.onGridContainerResize
+          window.addEventListener('resize', onResize)
+          window.addEventListener('DOMContentLoaded', onResize)
 
-          tabNavs.appendTab(key, name)
-          tabPanes.appendContent(key, dashboard)
+          this.dom.tabNavs.appendTab(key, name)
+          this.dom.tabPanes.appendContent(key, dashboard)
 
           DEMO_LAYOUT.forEach(pos => {
             const div = createItem(JSON.stringify(pos))
@@ -79,16 +76,55 @@
 
           return key
         })
+      }
 
-        tabNavs.addEventListener('tjp-click', (event) => {
-          const tab = tabPanes.getContent(event.detail.key)
+      createLocalDom () {
+        return {
+          tabNavs: this.querySelector('.tjp-tabs'),
+          tabPanes: this.querySelector('.tjp-main'),
+          menu: this.querySelector('.tjp-menu'),
+          widgetSelector: this.querySelector('#widget-selector')
+        }
+      }
+
+      /** @public */
+      initialize () {
+
+        this.widgetFactory = window.tjp.widgetFactory
+
+        this.dom = this.createLocalDom()
+
+        this.createDemoDashboards()
+        this.dom.tabNavs.showFirst()
+
+        this.dom.menu.addEventListener('create-widget', (event) => {
+          this.showWidgetSelector(event.detail.modelData)
+        })
+
+        // resize grid when tab becomes active
+        this.dom.tabNavs.addEventListener('tjp-click', (event) => {
+          const tab = this.dom.tabPanes.getContent(event.detail.key)
           if (tab) {
             tab.getElementsByTagName('x-grid-list')[0].grid
               .onGridContainerResize()
           }
         })
+      }
 
-        tabNavs.showFirst()
+      setupWidgetSelectorEvents () {
+
+      }
+
+      showWidgetSelector (modelData) {
+
+        const availableWidgets =
+          this.widgetFactory.getAvailableWidgetsDescriptors(modelData)
+
+        this.dom.widgetSelector
+          .showModal(availableWidgets)
+          .then(([tag, descriptor]) => {
+            console.log('creating widget', tag)
+          })
       }
     }
 
