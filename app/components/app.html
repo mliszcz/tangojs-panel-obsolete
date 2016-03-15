@@ -33,8 +33,7 @@
 
       const p = document.createElement('p')
       p.classList.add('card-text')
-      // p.textContent = content
-      p.textContent = 'x'
+      p.textContent = 'demo'
 
       const card = document.createElement('div')
       card.classList.add('card')
@@ -69,10 +68,10 @@
           this.dom.tabNavs.appendTab(key, name)
           this.dom.tabPanes.appendContent(key, dashboard)
 
-          DEMO_LAYOUT.forEach(pos => {
-            const div = createItem(JSON.stringify(pos))
-            dashboard.appendGridElement(div, pos)
-          })
+          // DEMO_LAYOUT.forEach(pos => {
+          //   const div = createItem(JSON.stringify(pos))
+          //   dashboard.appendGridElement(div, pos)
+          // })
 
           return key
         })
@@ -82,6 +81,7 @@
         return {
           tabNavs: this.querySelector('.tjp-tabs'),
           tabPanes: this.querySelector('.tjp-main'),
+          toolbar: this.querySelector('.tjp-tool'),
           menu: this.querySelector('.tjp-menu'),
           widgetSelector: this.querySelector('#widget-selector')
         }
@@ -117,6 +117,18 @@
             this.currentDashboard.grid.onGridContainerResize()
           }
         })
+
+        this.dom.toolbar.addEventListener('tjp-click-lock', () => {
+          this.classList.add('tjp-locked-layout')
+          this.lockedLayout = true
+        })
+
+        this.dom.toolbar.addEventListener('tjp-click-unlock', () => {
+          this.classList.remove('tjp-locked-layout')
+          this.lockedLayout = false
+        })
+
+        this.classList.add('tjp-locked-layout')
 
         this.currentDashboard =
           this.dom.tabPanes.getFirst().getElementsByTagName('x-grid-list')[0]
@@ -160,12 +172,14 @@
             const card = document.createElement('div')
             card.classList.add('card')
             card.classList.add('card-block')
-            card.draggable = true
             card.appendChild(widget)
 
+            const lock = document.createElement('div')
+            lock.classList.add('tjp-widget-lock')
+            lock.draggable = true
+            card.appendChild(lock)
+
             this.currentDashboard.appendGridElement(card, {
-              x: 99,
-              y: 99,
               w: width,
               h: height
             })

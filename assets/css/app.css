@@ -140,6 +140,28 @@ x-grid-list {
 }
 
 /******************************************************************************
+ * locking
+ */
+
+*[is='tjp-app'] .card {
+  position: relative;
+}
+
+*[is='tjp-app'] .tjp-widget-lock {
+  display: block;
+  background-color: rgba(255, 255, 255, 0.0);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.tjp-locked-layout .tjp-widget-lock {
+  display: none;
+}
+
+/******************************************************************************
  * tangoj widgets
  */
 
