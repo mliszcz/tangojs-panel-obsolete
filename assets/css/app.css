@@ -145,6 +145,12 @@ x-grid-list {
 
 *[is='tjp-app'] .card {
   position: relative;
+  display: flex
+}
+
+*[is='tjp-app'] .card > *:first-child {
+  display: inline-block;
+  flex: 1;
 }
 
 *[is='tjp-app'] .tjp-widget-lock {
