@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "http-server -c-1"
+    "server": "http-server -c-1",
+    "deploy": "gh-pages -d ."
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "webcomponents.js": "^0.7.20"
   },
   "devDependencies": {
+    "gh-pages": "^0.11.0",
     "http-server": "^0.9.0"
   }
 }
