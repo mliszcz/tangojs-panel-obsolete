@@ -1,0 +1,201 @@
+
+/******************************************************************************
+ * root elements
+ */
+
+.tjp-root {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas: "bttn logo tabs"
+                       ".... menu tool"
+                       ".... menu main"
+                       ".... foot main";
+}
+
+.tjp-bttn {
+  grid-area: bttn;
+}
+
+.tjp-logo {
+  grid-area: logo;
+}
+
+.tjp-menu {
+  grid-area: menu;
+}
+
+.tjp-tabs {
+  grid-area: tabs;
+}
+
+.tjp-tool {
+  grid-area: tool;
+}
+
+.tjp-main {
+  grid-area: main;
+}
+
+.tjp-foot {
+  grid-area: foot;
+}
+
+/******************************************************************************
+ * toggle button
+ */
+
+.tjp-toggleable {
+  width: 0px;
+  padding-right: .1rem;
+  padding-left: .1rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+.tjp-bttn-active ~ .tjp-toggleable {
+  width: 320px;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  visibility: visible;
+}
+
+/******************************************************************************
+ * misc. - layout
+ */
+
+
+html, body, .tjp-root {
+   /* Viewport includes scrollbar, percent size does not.
+    * note: calc(100%) wont work here! */
+  height: calc(100vh - (100vh - 100%));
+  margin: 0;
+  padding: 0;
+}
+
+.tjp-main {
+  /* main occupies cell 1fr x 1fr */
+  position: relative;
+}
+
+.tjp-main > div,
+x-grid-list {
+  /* absolutely position main's children to fill up all the space */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/******************************************************************************
+ * misc. - style
+ */
+
+.tjp-logo {
+  font-size: 1.5rem;
+}
+
+.tjp-tool {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+.tjp-foot {
+  margin-bottom: 2rem;
+}
+
+.tjp-foot > * {
+  display: block;
+}
+
+.card {
+  margin: 0;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.gld--grid-cell {
+  border-radius: 0.25rem;
+  border: none;
+}
+
+.gld--grid-item-dragging {
+  opacity: 0.8;
+  border: 3px dashed #373a3c;
+}
+
+x-grid-list *[draggable] {
+  user-select: none;
+  cursor: pointer;
+}
+
+x-grid-list {
+  display: grid;
+  grid-auto-columns: 100px;
+  grid-auto-rows: 100px;
+  grid-gap: 5px;
+}
+
+/******************************************************************************
+ * locking
+ */
+
+*[is='tjp-app'] .card {
+  position: relative;
+  display: flex
+}
+
+*[is='tjp-app'] .card > *:first-child {
+  display: inline-block;
+  flex: 1;
+}
+
+*[is='tjp-app'] .tjp-widget-lock {
+  display: block;
+  background-color: rgba(255, 255, 255, 0.0);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.tjp-locked-layout .tjp-widget-lock {
+  display: none;
+}
+
+/******************************************************************************
+ * tangoj widgets
+ */
+
+tangojs-device-tree /deep/ .treeview input.control-button ~ label:before {
+
+  content: 'expand_more';
+  width: 0;
+  height: 0;
+  position: absolute;
+  margin-left: calc(-1 * var(--list-padding));
+  color: #373a3c;
+
+  /* taken from material-icons.css */
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+tangojs-device-tree /deep/ .treeview input.control-button:checked ~ label:before {
+  content: 'chevron_right'
+}

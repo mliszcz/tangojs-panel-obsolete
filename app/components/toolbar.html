@@ -1,0 +1,76 @@
+<html>
+
+  <template>
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar buttons">
+      <div class="btn-group" role="group" aria-label="Delete group">
+        <button type="button" class="btn btn-danger" id="btn-tool-delete">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+      <div class="btn-group" role="group" aria-label="Utility group">
+        <button type="button" class="btn btn-secondary" id="btn-tool-export">
+          <i class="material-icons">save</i>
+        </button>
+      </div>
+      <div class="btn-group" role="group" aria-label="Lock group">
+        <button type="button" class="btn btn-secondary" id="btn-tool-lock">
+          <i class="material-icons">lock</i>
+        </button>
+        <button type="button" class="btn btn-secondary" id="btn-tool-unlock">
+          <i class="material-icons">lock_open</i>
+        </button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  (function (window) {
+    'use strict'
+
+    const document = window.document
+
+    const template = window.tjp.util
+      .getCurrentDocument(window)
+      .querySelector('template')
+
+    class TjpToolbarElement extends window.HTMLDivElement {
+
+      createdCallback () {
+        const clone = document.importNode(template.content, true)
+        this.appendChild(clone)
+
+        this.dom = {
+          btnDelete: this.querySelector('#btn-tool-delete'),
+          btnExport: this.querySelector('#btn-tool-export'),
+          btnLock: this.querySelector('#btn-tool-lock'),
+          btnUnlock: this.querySelector('#btn-tool-unlock')
+        }
+
+        this.dom.btnDelete.disabled = true
+        this.dom.btnExport.disabled = true
+
+        this.dom.btnLock.disabled = true // locked at start
+        this.dom.btnUnlock.disabled = false
+
+        this.dom.btnLock.addEventListener('click', () => {
+          this.dom.btnLock.disabled = ! this.dom.btnLock.disabled
+          this.dom.btnUnlock.disabled = ! this.dom.btnUnlock.disabled
+          this.dispatchEvent(new window.CustomEvent('tjp-click-lock', {}))
+        })
+
+        this.dom.btnUnlock.addEventListener('click', () => {
+          this.dom.btnLock.disabled = ! this.dom.btnLock.disabled
+          this.dom.btnUnlock.disabled = ! this.dom.btnUnlock.disabled
+          this.dispatchEvent(new window.CustomEvent('tjp-click-unlock', {}))
+        })
+      }
+    }
+
+    window.tjp.util.registerInheritedComponent(TjpToolbarElement,
+                                               'tjp-toolbar',
+                                               'div')
+
+  })(window)
+  </script>
+
+</html>

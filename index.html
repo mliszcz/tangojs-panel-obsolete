@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>TangoJS Panel</title>
+
+    <script src="node_modules/ecma-proposal-object-values-entries/polyfill.js"></script>
+
+    <script src="node_modules/html-imports-firefox-patch/patch.js"></script>
+    <script src="node_modules/webcomponents.js/HTMLImports.js"></script>
+
+    <script src="node_modules/moment/min/moment.min.js"></script>
+    <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+
+    <!-- dependencies for Bootstrap -->
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/tether/dist/js/tether.min.js"></script>
+
+    <link rel="stylesheet" href="node_modules/material-design-icons/iconfont/material-icons.css">
+
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="node_modules/tangojs/lib/tangojs.js"></script>
+    <script src="node_modules/tangojs-connector-local/lib/tangojs-connector-local.js"></script>
+    <script src="node_modules/tangojs-connector-local/lib/tangojs-demo-model.js"></script>
+
+    <script src="node_modules/tangojs-web-components/dist/tangojs-web-components.js"></script>
+
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-label.html">
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-line-edit.html">
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-command-button.html">
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-state-led.html">
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-trend.html">
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-form.html">
+    <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-device-tree.html">
+
+    <script type="text/javascript" src="app/app-common.js"></script>
+    <script type="text/javascript" src="app/widget-factory.js"></script>
+
+    <script type="text/javascript" src="app/services/WidgetFactoryService.js"></script>
+
+    <link rel="import" href="node_modules/grid-list-dom/dist/x-grid-list.html">
+    <link rel="import" href="app/components/widget-selector.html">
+    <link rel="import" href="app/components/left-menu/toggle.html">
+    <link rel="import" href="app/components/left-menu/menu.html">
+    <link rel="import" href="app/components/tabs-bar.html">
+    <link rel="import" href="app/components/tabs-content.html">
+    <link rel="import" href="app/components/toolbar.html">
+    <link rel="import" href="app/components/app.html">
+
+    <link rel="stylesheet" href="assets/css/app.css">
+
+    <script type="text/javascript">
+      (function (window) {
+        'use strict'
+        const model = window.demoModel.createModel()
+        const conn = new window.tangojsConnectorLocal.LocalConnector(model)
+        window.tangojs.setConnector(conn)
+      })(window)
+    </script>
+
+  </head>
+
+  <body >
+
+    <div is="tjp-app" class="tjp-root">
+
+      <button is="tjp-left-menu-toggle" class="tjp-bttn btn btn-secondary"></button>
+
+      <header class="tjp-logo tjp-toggleable">
+        TangoJS Panel
+      </header>
+
+      <div is="tjp-left-menu" class="tjp-menu tjp-toggleable"></div>
+
+      <ul is="tjp-tabs-bar" class="tjp-tabs nav nav-tabs"></ul>
+
+      <div is="tjp-toolbar" class="tjp-tool"></div>
+
+      <div is="tjp-tabs-content" class="tjp-main tab-content"></div>
+
+      <footer class="tjp-foot tjp-toggleable">
+        <small>Made with ❤ by Michal Liszcz</small>
+        <small>Powered by
+          <a href="https://tangojs.github.io">tangojs</a>
+        </small>
+      </footer>
+
+      <div is="tjp-widget-selector"
+           id="widget-selector"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog">
+      </div>
+
+    </div>
+
+    <script>
+    (function () {
+
+      const app = document.querySelector('[is="tjp-app"]')
+      const initialize = () => app.initialize()
+
+      if (HTMLImports && ! HTMLImports.useNative) {
+        window.addEventListener('HTMLImportsLoaded', initialize, true)
+      } else {
+        window.addEventListener('DOMContentLoaded', initialize, true)
+      }
+
+    })()
+    </script>
+
+  </body>
+
+</html>

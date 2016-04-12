@@ -1,0 +1,42 @@
+{
+  "name": "tangojs-panel",
+  "version": "0.1.0",
+  "description": "Synoptic panel built with tangojs.",
+  "author": "mliszcz <liszcz.michal@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "http-server -c-1",
+    "deploy": "gh-pages -d ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mliszcz/tangojs-panel.git"
+  },
+  "keywords": [
+    "tangojs",
+    "tango"
+  ],
+  "bugs": {
+    "url": "https://github.com/mliszcz/tangojs-panel/issues"
+  },
+  "homepage": "https://github.com/mliszcz/tangojs-panel#readme",
+  "dependencies": {
+    "bootstrap": "4.0.0-alpha.2",
+    "ecma-proposal-object-values-entries": "github:tc39/proposal-object-values-entries",
+    "grid-list-dom": "^0.1.0",
+    "html-imports-firefox-patch": "github:mliszcz/html-imports-firefox-patch",
+    "jquery": "^2.1.0",
+    "material-design-icons": "^2.1.0",
+    "tangojs-connector-local": "^0.2.0",
+    "tangojs-core": "^0.2.0",
+    "tangojs-web-components": "../tangojs-web-components",
+    "tether": "^1.2.0",
+    "webcomponents.js": "^0.7.20"
+  },
+  "devDependencies": {
+    "gh-pages": "^0.11.0",
+    "http-server": "^0.9.0"
+  }
+}

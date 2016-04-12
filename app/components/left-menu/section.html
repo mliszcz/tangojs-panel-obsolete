@@ -1,0 +1,68 @@
+<html>
+
+  <template>
+      <div class="panel-heading" role="tab">
+        <h5 class="panel-title">
+          <a class="collapsed"
+             data-toggle="collapse"
+             data-parent="#data-parent-placeholder"
+             href="#id-placeholder">
+            Title-placeholder
+          </a>
+        </h5>
+      </div>
+      <div id="id-placeholder" class="panel-collapse collapse" role="tabpanel">
+      </div>
+  </template>
+
+  <script>
+  (function (window) {
+    'use strict'
+
+    const document = window.document
+
+    const template = window.tjp.util
+      .getCurrentDocument(window)
+      .querySelector('template')
+
+    class TjpLeftMenuSectionElement extends window.HTMLDivElement {
+
+      createdCallback () {
+
+        this.classList.add('panel')
+        this.classList.add('panel-default')
+
+        const clone = document.importNode(template.content, true)
+
+        const id = this.getAttribute('panel-id')
+        const dataParent = this.getAttribute('panel-data-parent')
+        const expanded = this.getAttribute('panel-expanded')
+
+        const a = clone.querySelector('a[href="#id-placeholder"]')
+        a.innerText = this.getAttribute('panel-title')
+        a.setAttribute('href', `#${id}`)
+        a.setAttribute('data-parent', `${dataParent}`)
+
+        const div = clone.querySelector('div[id="id-placeholder"]')
+        div.setAttribute('id', id)
+
+        if (expanded !== null) {
+          div.classList.add('in')
+        }
+
+        while (this.hasChildNodes()) {
+          div.appendChild(this.firstChild)
+        }
+
+        this.appendChild(clone)
+      }
+    }
+
+    window.tjp.util.registerInheritedComponent(TjpLeftMenuSectionElement,
+                                               'tjp-left-menu-section',
+                                               'div')
+
+  })(window)
+  </script>
+
+</html>
