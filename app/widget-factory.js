@@ -1,6 +1,8 @@
 (function (window) {
   'use strict'
 
+  // TODO will be removed
+
   const document = window.document
 
   // TODO these descriptors should be definied on each widget

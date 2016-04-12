@@ -76,7 +76,7 @@
         span.innerText = tag
 
         const p = document.createElement('p')
-        p.innerText = descriptor.description
+        p.innerText = descriptor.description // TODO this is empty
 
         div.appendChild(label)
         div.appendChild(p)
@@ -86,13 +86,14 @@
         return div
       }
 
-      displayAvailableWidgetsForm (availableWidgets) {
+      displayAvailableWidgetsForm (avalilableComponentDescriptors) {
         const ct = this.dom.radioContainer
         while (ct.hasChildNodes()) {
           ct.removeChild(ct.firstChild)
         }
-        Object.keys(availableWidgets).forEach(tag => {
-          ct.appendChild(this.createWidgetEntry(tag, availableWidgets[tag]))
+        avalilableComponentDescriptors.forEach(descriptor => {
+          ct.appendChild(this.createWidgetEntry(descriptor.tag,
+                                                descriptor))
         })
         const first = ct.querySelector('input[type="radio"]')
         if (first) {
@@ -107,8 +108,8 @@
        * @param {Array<Object>} availableWidgets
        * @return {Promise<[string, Object]>}
        */
-      showModal (availableWidgets) {
-        this.displayAvailableWidgetsForm(availableWidgets)
+      showModal (avalilableComponentDescriptors) {
+        this.displayAvailableWidgetsForm(avalilableComponentDescriptors)
         return new Promise((resolve, reject) => {
 
           let cancelListener
@@ -128,7 +129,20 @@
             removeEventListeners()
 
             const tag = this.dom.form['widget'].value
-            resolve([tag, availableWidgets[tag]])
+            const descriptor =
+              avalilableComponentDescriptors.find(x => x.tag == tag)
+
+            const attributeMap = {}
+
+            Object.entries(descriptor.attributes).forEach(([name, opts]) => {
+              const conv =
+                window.tangojs.web.util.converters.getConvertToAttribute(
+                  opts.type)
+              const hName = window.tangojs.web.util.hypenatedForm(name)
+              attributeMap[hName] = conv(opts.defaultValue)
+            })
+
+            resolve([descriptor, attributeMap])
           }
 
           this.dom.cancelButton.addEventListener('click', cancelListener)

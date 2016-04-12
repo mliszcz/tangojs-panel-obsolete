@@ -115,11 +115,12 @@
     class CreateWidgetRequestEvent extends window.CustomEvent {
 
       /**
-       * @param {Array<Object>} modelData
+       * @typedef {DeviceInfo|AttributeInfo|CommandInfo} AnyInfo
+       * @param {Array<({model: string, info: AnyInfo})>} modelList
        */
-      constructor (modelData) {
+      constructor (modelList) {
         super('create-widget', {
-          detail: {modelData}
+          detail: {modelList}
         })
       }
     }
@@ -161,12 +162,7 @@
         btnClearTree.addEventListener('click', () => tree.clearSelections())
 
         btnAddWidget.addEventListener('click', (event) => {
-          const modelData = tree.getSelections().map(x => {
-            return {
-              model: extractModel(x).join('/'),
-              data: x.value
-            }
-          })
+          const modelData = tree.getSelections().map(x => x.value)
           const ev = new CreateWidgetRequestEvent(modelData)
           tree.clearSelections()
           disableButtons(true)

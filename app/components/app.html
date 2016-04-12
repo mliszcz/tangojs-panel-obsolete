@@ -98,7 +98,7 @@
         this.dom.tabNavs.showFirst()
 
         this.dom.menu.addEventListener('create-widget', (event) => {
-          this.showWidgetSelector(event.detail.modelData)
+          this.showWidgetSelector(event.detail.modelList)
         })
 
         // resize grid when tab becomes active
@@ -134,26 +134,61 @@
           this.dom.tabPanes.getFirst().getElementsByTagName('x-grid-list')[0]
       }
 
-      showWidgetSelector (modelData) {
+      showWidgetSelector (modelAndInfoList) {
 
-        const datas = modelData.map(x => x.data)
-        const models = modelData.map(x => x.model)
+        const models = modelAndInfoList.map(x => x.model)
 
-        const availableWidgets =
-          this.widgetFactory.getAvailableWidgetsDescriptors(datas)
+        const { DeviceInfo, AttributeInfo, CommandInfo } = window.tangojs.struct
+        const readOnly = window.tangojs.tango.AttrWriteType.READ
+
+        this.widgetFactoryService =
+          new window.tjp.services.WidgetFactoryService(
+            window.tangojs.web.components)
+
+        const isAny = (constructor) =>  {
+          return !! modelAndInfoList.find(x => x.info instanceof constructor)
+        }
+
+        const avalilableComponentDescriptors =
+          this.widgetFactoryService.getAvailableComponentDescriptors({
+            multipleModels: modelAndInfoList.length > 1,
+            attributes: isAny(AttributeInfo),
+            commands: isAny(CommandInfo),
+            status: isAny(DeviceInfo),
+            readOnly: !! modelAndInfoList
+              .find(x => x.info.writable === readOnly)
+          })
+
+        console.log('available components', avalilableComponentDescriptors)
 
         this.dom.widgetSelector
-          .showModal(availableWidgets)
-          .then(([tag, descriptor]) => {
+          .showModal(avalilableComponentDescriptors)
+          .then(([descriptor, attributeMap]) => {
 
             if (! this.currentDashboard) {
               return
             }
 
-            const widget = this.widgetFactory.buildWidget(
-              tag,
-              models,
-              descriptor.attributes)
+            const tag = descriptor.tag
+
+            const modelProperty =
+              descriptor.capabilities.multipleModels ? models : models[0]
+
+            const modelConverter =
+              window.tangojs.web.util.converters
+                .getConvertToAttribute(descriptor.attributes['model'].type)
+
+            attributeMap['model'] = modelConverter(modelProperty)
+
+            console.log('creating', tag, attributeMap)
+
+            const component =
+              this.widgetFactoryService.buildComponent(tag, attributeMap)
+
+            if (! component) {
+              console.error('failed to instantiate')
+              return
+            }
 
             // TODO move sizes to widget descriptors
             let width = 5
@@ -166,13 +201,13 @@
               width = 2
 
               const model0 = models[0].split('/')
-              widget.innerText = model0[model0.length-1]
+              component.innerText = model0[model0.length-1]
             }
 
             const card = document.createElement('div')
             card.classList.add('card')
             card.classList.add('card-block')
-            card.appendChild(widget)
+            card.appendChild(component)
 
             const lock = document.createElement('div')
             lock.classList.add('tjp-widget-lock')

@@ -24,13 +24,14 @@
   "homepage": "https://github.com/mliszcz/tangojs-panel#readme",
   "dependencies": {
     "bootstrap": "4.0.0-alpha.2",
+    "ecma-proposal-object-values-entries": "github:tc39/proposal-object-values-entries",
     "grid-list-dom": "^0.1.0",
     "html-imports-firefox-patch": "github:mliszcz/html-imports-firefox-patch",
     "jquery": "^2.1.0",
     "material-design-icons": "^2.1.0",
-    "tangojs": "^0.2.0",
     "tangojs-connector-local": "^0.2.0",
-    "tangojs-web-components": "git+ssh://git@github.com/mliszcz/tangojs-web-components.git#master",
+    "tangojs-core": "^0.2.0",
+    "tangojs-web-components": "../tangojs-web-components",
     "tether": "^1.2.0",
     "webcomponents.js": "^0.7.20"
   },
