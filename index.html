@@ -24,11 +24,11 @@
     <link rel="stylesheet" href="node_modules/material-design-icons/iconfont/material-icons.css">
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
-    <script src="node_modules/tangojs/lib/tangojs.js"></script>
+    <script src="node_modules/tangojs-core/lib/tangojs-core.js"></script>
     <script src="node_modules/tangojs-connector-local/lib/tangojs-connector-local.js"></script>
-    <script src="node_modules/tangojs-connector-local/lib/tangojs-demo-model.js"></script>
+    <script src="node_modules/tangojs-connector-local/lib/demo-model.js"></script>
 
     <script src="node_modules/tangojs-web-components/dist/tangojs-web-components.js"></script>
 
@@ -40,10 +40,13 @@
     <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-form.html">
     <link rel="import" href="node_modules/tangojs-web-components/dist/components/tangojs-device-tree.html">
 
+    <link rel="import" href="node_modules/web-component-modal-window/x-modal-window.html">
+
     <script type="text/javascript" src="app/app-common.js"></script>
     <script type="text/javascript" src="app/widget-factory.js"></script>
 
-    <script type="text/javascript" src="app/services/WidgetFactoryService.js"></script>
+    <!-- <script type="text/javascript" src="app/services/WidgetFactoryService.js"></script> -->
+    <script type="text/javascript" src="dist/tangojs-panel.js"></script>
 
     <link rel="import" href="node_modules/grid-list-dom/dist/x-grid-list.html">
     <link rel="import" href="app/components/widget-selector.html">
@@ -59,9 +62,9 @@
     <script type="text/javascript">
       (function (window) {
         'use strict'
-        const model = window.demoModel.createModel()
-        const conn = new window.tangojsConnectorLocal.LocalConnector(model)
-        window.tangojs.setConnector(conn)
+        const model = window.tangojsLocalDemoModel.createModel()
+        const conn = new window.tangojs.connector.local.LocalConnector(model)
+        window.tangojs.core.setConnector(conn)
       })(window)
     </script>
 
@@ -92,12 +95,15 @@
         </small>
       </footer>
 
-      <div is="tjp-widget-selector"
+
+      <tjp-widget-selector></tjp-widget-selector>
+
+      <!-- <div is="tjp-widget-selector"
            id="widget-selector"
            class="modal fade"
            tabindex="-1"
            role="dialog">
-      </div>
+      </div> -->
 
     </div>
 

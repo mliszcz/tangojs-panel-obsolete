@@ -146,8 +146,8 @@
     }
   }
 
-  const { AttributeInfo, CommandInfo } = window.tangojs.struct
-  const readOnly = window.tangojs.tango.AttrWriteType.READ
+  const { AttributeInfo, CommandInfo } = window.tangojs.core.api
+  const readOnly = window.tangojs.core.tango.AttrWriteType.READ
   const isString = (s => s instanceof String || typeof s === 'string')
 
   window.tjp.widgetFactory = {

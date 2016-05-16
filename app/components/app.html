@@ -83,7 +83,7 @@
           tabPanes: this.querySelector('.tjp-main'),
           toolbar: this.querySelector('.tjp-tool'),
           menu: this.querySelector('.tjp-menu'),
-          widgetSelector: this.querySelector('#widget-selector')
+          widgetSelector: this.querySelector('tjp-widget-selector')
         }
       }
 
@@ -138,8 +138,8 @@
 
         const models = modelAndInfoList.map(x => x.model)
 
-        const { DeviceInfo, AttributeInfo, CommandInfo } = window.tangojs.struct
-        const readOnly = window.tangojs.tango.AttrWriteType.READ
+        const { DeviceInfo, AttributeInfo, CommandInfo } = window.tangojs.core.api
+        const readOnly = window.tangojs.core.tango.AttrWriteType.READ
 
         this.widgetFactoryService =
           new window.tjp.services.WidgetFactoryService(
@@ -151,12 +151,11 @@
 
         const avalilableComponentDescriptors =
           this.widgetFactoryService.getAvailableComponentDescriptors({
-            multipleModels: modelAndInfoList.length > 1,
-            attributes: isAny(AttributeInfo),
-            commands: isAny(CommandInfo),
-            status: isAny(DeviceInfo),
-            readOnly: !! modelAndInfoList
-              .find(x => x.info.writable === readOnly)
+            // multipleModels: modelAndInfoList.length > 1,
+            attributeModel: isAny(AttributeInfo),
+            commandModel: isAny(CommandInfo),
+            statusModel: isAny(DeviceInfo),
+            readOnlyModel: !! modelAndInfoList.find(x => x.info.writable === readOnly)
           })
 
         console.log('available components', avalilableComponentDescriptors)
@@ -169,16 +168,19 @@
               return
             }
 
-            const tag = descriptor.tag
+            const tag = descriptor.tagName
 
-            const modelProperty =
-              descriptor.capabilities.multipleModels ? models : models[0]
+            // const modelProperty =
+              // descriptor.capabilities.multipleModels ? models : models[0]
 
-            const modelConverter =
-              window.tangojs.web.util.converters
-                .getConvertToAttribute(descriptor.attributes['model'].type)
+            const tpe = descriptor.attributes['model'].type
+            const modelProperty = Array.isArray(tpe) ? models : models[0]
 
-            attributeMap['model'] = modelConverter(modelProperty)
+            // const modelConverter =
+            //   window.tangojs.web.util.converters
+            //     .getConvertToAttribute(descriptor.attributes['model'].type)
+
+            attributeMap['model'] = modelProperty // modelConverter(modelProperty)
 
             console.log('creating', tag, attributeMap)
 

@@ -1,87 +1,101 @@
-(function (window) {
-  'use strict'
 
-  const document = window.document
+import { document } from 'window'
+import { util as webutil } from 'tangojs-web-components'
+
+const { getDefaultValue, getConvertToAttribute } = webutil.converters
+
+/**
+ * @param {string} tagName
+ * @return {tango.components.util.ComponentDescriptor}
+ */
+function resolveTagToDescriptor (tagName, componentContainer) {
+  const constructor = Object.values(componentContainer).find(e => {
+    return e.descriptor && e.descriptor.tagName === tagName
+  })
+  return constructor ? constructor.descriptor : undefined
+}
+
+/**
+ * @param {tango.components.util.ComponentDescriptor} descriptor
+ * @param {window.tangojs.web.util.ComponentCapabilities} requiredCapabilities
+ * @return {boolean}
+ */
+function areCapabilitiesSupported (descriptor, requiredCapabilities) {
+  return descriptor && ! Object.keys(requiredCapabilities).find(c => {
+    return (requiredCapabilities[c] === true && ! descriptor.capabilities[c])
+  })
+}
+
+/**
+ * Creates attribute map with sane values.
+ * @param {tango.components.util.ComponentDescriptor} descriptor
+ * @return {Map<string,Object>}
+ */
+function buildDefaultAttributes (descriptor) {
+  return Object.keys(descriptor.attributes).reduce((acc, attribute) => {
+    if (attribute === 'poll-period') {
+      acc[attribute] = 1000
+    } else if (attribute.startsWith('show-')) {
+      acc[attribute] = true
+    } else {
+      // fall-back to default attribute defined in component
+      // acc[attribute] = getDefaultValue(descriptor.attributes[attribute].type)
+    }
+    return acc
+  }, {})
+}
+
+/**
+ * Factory for TangoJS widgets / components.
+ */
+export default class WidgetFactoryService {
 
   /**
-   * Factory for TangoJS widgets / components.
+   * @param {Object} componentContainer
    */
-  class WidgetFactoryService {
-
-    /**
-     * @param {Object} componentContainer
-     */
-    constructor (componentContainer) {
-      this.componentContainer = componentContainer
-    }
-
-    /**
-     * @param {string} tagName
-     * @return {tango.components.util.ComponentDescriptor}
-     * @private
-     */
-    resolveTag (tagName) {
-      const constructor = Object.values(this.componentContainer).find(e => {
-        return e.descriptor.tag == tagName
-      })
-      return constructor ? constructor.descriptor : undefined
-    }
-
-    /**
-     * @param {tango.components.util.ComponentDescriptor} descriptor
-     * @param {window.tangojs.web.util.ComponentCapabilities} requiredCapability
-     * @return {boolean}
-     * @private
-     */
-    areCapabilitiesSupported (descriptor, requiredCapability) {
-      return !Object.keys(requiredCapability).find(cap => {
-        return (requiredCapability[cap] === true &&
-          !descriptor.capabilities[cap])
-      })
-    }
-
-    /**
-    * @param {window.tangojs.web.util.ComponentCapabilities} requiredCapability
-    * @return {Array<window.tangojs.web.util.ComponentDescriptor>}
-    */
-    getAvailableComponentDescriptors (requiredCapability) {
-      return Object.values(this.componentContainer).filter(e => {
-        return this.areCapabilitiesSupported(e.descriptor, requiredCapability)
-      }).map(e => e.descriptor)
-    }
-
-    /**
-     * @param {string} tagName
-     * @param {Object} attributeMap
-     * @param {DocumentFragment} content
-     * @return {HTMLElement}
-     */
-    buildComponent (tagName, attributeMap = {}, content = undefined) {
-
-      const descriptor = this.resolveTag(tagName)
-
-      if (descriptor) {
-        const attributes = Object.assign({},
-                                         descriptor.attributes,
-                                         attributeMap)
-        const component = document.createElement(descriptor.tag)
-        Object.entries(attributes).forEach(([name, value]) => {
-          // FIXME value is assumed to be a DOMString
-          // use synchronization logic
-          component.setAttribute(name, value)
-        })
-        if (content) {
-          component.appendChild(content)
-        }
-        return component
-      } else {
-        return undefined
-      }
-    }
+  constructor (componentContainer) {
+    /** @private */
+    this.componentContainer = componentContainer
   }
 
-  window.tjp = window.tjp || {}
-  window.tjp.services = window.tjp.services || {}
-  window.tjp.services.WidgetFactoryService = WidgetFactoryService
+  /**
+   * @param {window.tangojs.web.util.ComponentCapabilities} requiredCapabilities
+   * @return {Array<window.tangojs.web.util.ComponentDescriptor>}
+  */
+  getAvailableComponentDescriptors (requiredCapabilities) {
+    return Object.values(this.componentContainer).filter(e => {
+      return areCapabilitiesSupported(e.descriptor, requiredCapabilities)
+    }).map(e => e.descriptor)
+  }
 
-})(window)
+  /**
+   * @param {string} tagName
+   * @param {Map<string,Object>} attributeMap
+   * @param {DocumentFragment} content
+   * @return {HTMLElement}
+   */
+  buildComponent (tagName, attributeMap = {}, content = undefined) {
+
+    const descriptor = resolveTagToDescriptor(tagName, this.componentContainer)
+
+    if (! descriptor) {
+      return undefined
+    }
+
+    const attributes =
+      Object.assign({}, buildDefaultAttributes(descriptor), attributeMap)
+
+    const component = document.createElement(descriptor.tagName)
+
+    Object.entries(attributes).forEach(([name, value]) => {
+      const convert = getConvertToAttribute(descriptor.attributes[name].type)
+      component.setAttribute(name, convert(value))
+    })
+
+    if (content) {
+      component.appendChild(content)
+    }
+
+    return component
+  }
+}
