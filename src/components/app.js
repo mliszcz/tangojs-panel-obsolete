@@ -2,46 +2,6 @@
 import window from 'window'
 import { document, HTMLDivElement } from 'window'
 
-const DEMO_LAYOUT = [
-  {w: 1, h: 1, x: 0, y: 0},
-  {w: 1, h: 2, x: 0, y: 1},
-  {w: 2, h: 2, x: 1, y: 0},
-  {w: 1, h: 1, x: 1, y: 2},
-  {w: 2, h: 1, x: 2, y: 2},
-  {w: 1, h: 1, x: 3, y: 0},
-  {w: 1, h: 1, x: 3, y: 1},
-  {w: 1, h: 1, x: 4, y: 0},
-  {w: 3, h: 1, x: 5, y: 0},
-  {w: 2, h: 1, x: 5, y: 1},
-  {w: 1, h: 1, x: 5, y: 2},
-  {w: 2, h: 1, x: 6, y: 2},
-  {w: 1, h: 1, x: 7, y: 1},
-  {w: 2, h: 1, x: 8, y: 0},
-  {w: 1, h: 1, x: 10, y: 0},
-  {w: 1, h: 1, x: 10, y: 1},
-  {w: 1, h: 1, x: 10, y: 2}
-]
-
-function createItem (content) {
-
-  const h4 = document.createElement('h4')
-  h4.classList.add('card-title')
-  // h4.textContent = content
-
-  const p = document.createElement('p')
-  p.classList.add('card-text')
-  p.textContent = 'demo'
-
-  const card = document.createElement('div')
-  card.classList.add('card')
-  card.classList.add('card-block')
-  card.appendChild(h4)
-  card.appendChild(p)
-  card.draggable = true
-
-  return card
-}
-
 class AppMainElement extends HTMLDivElement {
 
   createdCallback () {
@@ -49,7 +9,7 @@ class AppMainElement extends HTMLDivElement {
   }
 
   createDemoDashboards () {
-    const keys = [1, 2, 3].map(idx => {
+    [1, 2, 3].map(idx => {
 
       const key = `db${idx}`
       const name = `Dashboard #${idx}`
@@ -64,11 +24,6 @@ class AppMainElement extends HTMLDivElement {
 
       this.dom.tabNavs.appendTab(key, name)
       this.dom.tabPanes.appendContent(key, dashboard)
-
-      // DEMO_LAYOUT.forEach(pos => {
-      //   const div = createItem(JSON.stringify(pos))
-      //   dashboard.appendGridElement(div, pos)
-      // })
 
       return key
     })
@@ -154,8 +109,6 @@ class AppMainElement extends HTMLDivElement {
           === readOnly)
       })
 
-    console.log('available components', avalilableComponentDescriptors)
-
     this.dom.widgetSelector
       .showModal(avalilableComponentDescriptors)
       .then(([descriptor, attributeMap]) => {
@@ -177,8 +130,6 @@ class AppMainElement extends HTMLDivElement {
         //     .getConvertToAttribute(descriptor.attributes['model'].type)
 
         attributeMap['model'] = modelProperty // modelConverter(modelProperty)
-
-        console.log('creating', tag, attributeMap)
 
         const component
           = this.widgetFactoryService.buildComponent(tag, attributeMap)

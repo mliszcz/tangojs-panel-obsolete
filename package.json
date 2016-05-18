@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "compile": "rollup -c rollup.config.js && node rollupComponents.js",
+    "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "http-server -c-1",
     "deploy": "gh-pages -d ."
@@ -28,20 +29,20 @@
     "ecma-proposal-object-values-entries": "github:tc39/proposal-object-values-entries",
     "grid-list-dom": "^0.1.0",
     "html-imports-firefox-patch": "github:mliszcz/html-imports-firefox-patch",
-    "jquery": "^2.1.0",
+    "jquery": "^2.2.0",
     "material-design-icons": "^2.2.0",
     "tangojs-connector-local": "^0.4.0",
     "tangojs-core": "^0.4.0",
     "tangojs-web-components": "^0.4.0",
     "tether": "^1.3.0",
-    "web-component-modal-window": "../web-component-modal-window",
+    "web-component-modal-window": "github:mliszcz/web-component-modal-window",
     "webcomponents.js": "^0.7.20"
   },
   "devDependencies": {
+    "eslint": "^2.10.2",
     "gh-pages": "^0.11.0",
     "glob": "^7.0.3",
     "http-server": "^0.9.0",
-    "minimatch": "^3.0.0",
     "rollup": "^0.26.3"
   }
 }
