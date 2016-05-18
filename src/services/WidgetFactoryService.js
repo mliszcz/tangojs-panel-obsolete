@@ -2,7 +2,7 @@
 import { document } from 'window'
 import { util as webutil } from 'tangojs-web-components'
 
-const { getDefaultValue, getConvertToAttribute } = webutil.converters
+const { getConvertToAttribute } = webutil.converters
 
 /**
  * @param {string} tagName
@@ -82,8 +82,8 @@ export default class WidgetFactoryService {
       return undefined
     }
 
-    const attributes =
-      Object.assign({}, buildDefaultAttributes(descriptor), attributeMap)
+    const attributes
+      = Object.assign({}, buildDefaultAttributes(descriptor), attributeMap)
 
     const component = document.createElement(descriptor.tagName)
 

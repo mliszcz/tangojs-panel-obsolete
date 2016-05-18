@@ -1,0 +1,107 @@
+<html>
+
+  <link rel="import" href="section.html">
+
+  <style>
+
+    .device-tree-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .device-tree-block .btn-toolbar,
+    .device-tree-block .btn-group {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+    }
+
+    .device-tree-block .btn-group button {
+      flex: min-content;
+    }
+
+    .device-tree-block .btn-group button:nth-child(1) {
+      flex: 1;
+    }
+
+    .device-tree-block .btn-group button i {
+      vertical-align: middle;
+    }
+
+    .device-tree-block .btn-group button:nth-child(1) i {
+      margin-right: .5rem;
+    }
+
+  </style>
+
+  <template>
+
+    <div id="left-menu-accordion" role="tablist">
+
+      <div is="tjp-left-menu-section"
+           panel-data-parent="#left-menu-accordion"
+           panel-title="Device tree"
+           panel-id="device-tree"
+           panel-expanded>
+
+        <div class="device-tree-block">
+
+          <div class="btn-toolbar" role="toolbar">
+            <div class="btn-group" role="group">
+              <button type="button"
+                      class="btn btn-primary"
+                      id="btn-add-widget">
+                <i class="material-icons">library_add</i>
+                <span>Add widget<span>
+              </button>
+              <button type="button"
+                      class="btn btn-secondary"
+                      id="btn-clear-tree">
+                <i class="material-icons">check_box_outline_blank</i>
+              </button>
+              <button type="button"
+                      class="btn btn-secondary"
+                      id="btn-reload-tree">
+                <i class="material-icons">autorenew</i>
+              </button>
+            </div>
+          </div>
+
+          <tangojs-device-tree></tangojs-device-tree>
+
+        </div>
+
+      </div>
+
+      <div is="tjp-left-menu-section"
+           panel-data-parent="#left-menu-accordion"
+           panel-title="Dashboard"
+           panel-id="menu-dashboard">
+
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">New dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Import dashboard</a>
+          </li>
+        </ul>
+
+      </div>
+
+      <div is="tjp-left-menu-section"
+           panel-data-parent="#left-menu-accordion"
+           panel-title="Preferences"
+           panel-id="menu-preferences">
+
+        Preferences
+
+      </div>
+
+    </div>
+
+  </template>
+
+  <script type="text/javascript" src="menu.js"></script>
+
+</html>

@@ -1,8 +1,8 @@
 
 import WidgetFactoryService from './services/WidgetFactoryService'
-import * as _helpers from './helpers'
+import * as _util from './util'
 
-export const helpers = _helpers
+export const util = _util
 
 export const components = { }
 
