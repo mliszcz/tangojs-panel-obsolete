@@ -1,6 +1,9 @@
 
-import { document, HTMLUListElement, CustomEvent } from 'window'
+import { document, HTMLUListElement } from 'window'
 import jQuery from 'jQuery'
+import app from 'app'
+
+const { TabsBarTabActivatedEvent } = app.events
 
 class AppTabsBarElement extends HTMLUListElement {
 
@@ -27,10 +30,8 @@ class AppTabsBarElement extends HTMLUListElement {
     tab.classList.add('nav-item')
     tab.appendChild(a)
 
-    const event = new CustomEvent('tjp-click', { detail: { key } })
-
     jQuery(a).on('shown.bs.tab', () => {
-      this.dispatchEvent(event)
+      this.dispatchEvent(new TabsBarTabActivatedEvent(key))
     })
 
     this.appendChild(tab)

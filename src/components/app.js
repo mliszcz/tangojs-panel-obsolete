@@ -1,6 +1,13 @@
 
 import window from 'window'
 import { document, HTMLDivElement } from 'window'
+import app from 'app'
+
+const {
+  DashboardLayoutLockedEvent,
+  SelectorModelSelectedEvent,
+  TabsBarTabActivatedEvent
+} = app.events
 
 class AppMainElement extends HTMLDivElement {
 
@@ -47,12 +54,12 @@ class AppMainElement extends HTMLDivElement {
     this.createDemoDashboards()
     this.dom.tabNavs.showFirst()
 
-    this.dom.menu.addEventListener('create-widget', (event) => {
-      this.showWidgetSelector(event.detail.modelList)
-    })
+    this.dom.menu.addEventListener(SelectorModelSelectedEvent.EVENT_NAME,
+      (event) => { this.showWidgetSelector(event.models) })
 
     // resize grid when tab becomes active
-    this.dom.tabNavs.addEventListener('tjp-click', (event) => {
+    this.dom.tabNavs.addEventListener(TabsBarTabActivatedEvent.EVENT_NAME,
+    (event) => {
 
       // TODO use dedicated bootstrap event
       const tab = this.dom.tabPanes.getContent(event.detail.key)
@@ -68,14 +75,15 @@ class AppMainElement extends HTMLDivElement {
       }
     })
 
-    this.dom.toolbar.addEventListener('tjp-click-lock', () => {
-      this.classList.add('tjp-locked-layout')
-      this.lockedLayout = true
-    })
-
-    this.dom.toolbar.addEventListener('tjp-click-unlock', () => {
-      this.classList.remove('tjp-locked-layout')
-      this.lockedLayout = false
+    this.dom.toolbar.addEventListener(DashboardLayoutLockedEvent.EVENT_NAME,
+    (event) => {
+      if (event.locked) {
+        this.classList.add('tjp-locked-layout')
+        this.lockedLayout = true
+      } else {
+        this.classList.remove('tjp-locked-layout')
+        this.lockedLayout = false
+      }
     })
 
     this.classList.add('tjp-locked-layout')
@@ -86,7 +94,8 @@ class AppMainElement extends HTMLDivElement {
 
   showWidgetSelector (modelAndInfoList) {
 
-    const models = modelAndInfoList.map(x => x.model)
+    const models = Object.keys(modelAndInfoList)
+    const infos = Object.values(modelAndInfoList)
 
     const { DeviceInfo, AttributeInfo, CommandInfo } = window.tangojs.core.api
     const readOnly = window.tangojs.core.tango.AttrWriteType.READ
@@ -96,7 +105,7 @@ class AppMainElement extends HTMLDivElement {
         window.tangojs.web.components)
 
     const isAny = (constructor) =>  {
-      return !! modelAndInfoList.find(x => x.info instanceof constructor)
+      return !! infos.find(x => x instanceof constructor)
     }
 
     const avalilableComponentDescriptors
@@ -105,8 +114,7 @@ class AppMainElement extends HTMLDivElement {
         attributeModel: isAny(AttributeInfo),
         commandModel: isAny(CommandInfo),
         statusModel: isAny(DeviceInfo),
-        readOnlyModel: !! modelAndInfoList.find(x => x.info.writable
-          === readOnly)
+        readOnlyModel: !! infos.find(x => x.writable === readOnly)
       })
 
     this.dom.widgetSelector

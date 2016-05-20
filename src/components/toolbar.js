@@ -1,6 +1,8 @@
 
-import { document, HTMLDivElement, CustomEvent } from 'window'
+import { document, HTMLDivElement } from 'window'
 import app from 'app'
+
+const { DashboardLayoutLockedEvent } = app.events
 
 const template = app.util.getCurrentDocument().querySelector('template')
 
@@ -26,13 +28,13 @@ class AppToolbarElement extends HTMLDivElement {
     this.dom.btnLock.addEventListener('click', () => {
       this.dom.btnLock.disabled = ! this.dom.btnLock.disabled
       this.dom.btnUnlock.disabled = ! this.dom.btnUnlock.disabled
-      this.dispatchEvent(new CustomEvent('tjp-click-lock', {}))
+      this.dispatchEvent(new DashboardLayoutLockedEvent(true)) //
     })
 
     this.dom.btnUnlock.addEventListener('click', () => {
       this.dom.btnLock.disabled = ! this.dom.btnLock.disabled
       this.dom.btnUnlock.disabled = ! this.dom.btnUnlock.disabled
-      this.dispatchEvent(new CustomEvent('tjp-click-unlock', {}))
+      this.dispatchEvent(new DashboardLayoutLockedEvent(false))
     })
   }
 }

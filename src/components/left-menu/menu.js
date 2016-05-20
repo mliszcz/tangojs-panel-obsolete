@@ -1,21 +1,10 @@
 
-import { document, HTMLDivElement, CustomEvent } from 'window'
+import { document, HTMLDivElement } from 'window'
 import app from 'app'
 
+const { SelectorModelSelectedEvent } = app.events
+
 const template = app.util.getCurrentDocument().querySelector('template')
-
-class CreateWidgetRequestEvent extends CustomEvent {
-
-  /**
-   * @typedef {DeviceInfo|AttributeInfo|CommandInfo} AnyInfo
-   * @param {Array<({model: string, info: AnyInfo})>} modelList
-   */
-  constructor (modelList) {
-    super('create-widget', {
-      detail: {modelList}
-    })
-  }
-}
 
 class AppLeftMenuElement extends HTMLDivElement {
 
@@ -33,32 +22,20 @@ class AppLeftMenuElement extends HTMLDivElement {
       btnAddWidget.disabled = disable
     }
 
-    // const extractModel = (treeEntry) => {
-    //   const path = treeEntry.path
-    //   // console.log('EXTRACTING', path)
-    //   if (path[path.length-1] === 'status') {
-    //     const newPath = path.slice()
-    //     newPath.length = path.length-1
-    //     // console.log('returning', newPath)
-    //     return newPath
-    //   } else {
-    //     const newPath = path.slice()
-    //     newPath[path.length-2] = path[path.length-1]
-    //     newPath.length = path.length-1
-    //     return newPath
-    //   }
-    // }
-
     disableButtons(true)
 
     btnClearTree.addEventListener('click', () => tree.clearSelections())
 
     btnAddWidget.addEventListener('click', () => {
-      const modelData = tree.getSelections().map(x => x.value)
-      const ev = new CreateWidgetRequestEvent(modelData)
+
+      const models = tree.getSelections().reduce((acc, e) => {
+        acc[e.value.model] = e.value.info
+        return acc
+      }, {})
+
       tree.clearSelections()
       disableButtons(true)
-      this.dispatchEvent(ev)
+      this.dispatchEvent(new SelectorModelSelectedEvent(models))
     })
 
     btnReloadTree.addEventListener('click', () => {
