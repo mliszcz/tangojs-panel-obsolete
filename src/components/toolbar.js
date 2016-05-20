@@ -9,33 +9,28 @@ const template = app.util.getCurrentDocument().querySelector('template')
 class AppToolbarElement extends HTMLDivElement {
 
   createdCallback () {
+
     const clone = document.importNode(template.content, true)
     this.appendChild(clone)
 
-    this.dom = {
-      btnDelete: this.querySelector('#btn-tool-delete'),
-      btnExport: this.querySelector('#btn-tool-export'),
-      btnLock: this.querySelector('#btn-tool-lock'),
-      btnUnlock: this.querySelector('#btn-tool-unlock')
+    const btnDelete = this.querySelector('button[data-id="delete"]')
+    const btnExport = this.querySelector('button[data-id="export"]')
+    const btnLock = this.querySelector('button[data-id="lock"]')
+    const btnUnlock = this.querySelector('button[data-id="unlock"]')
+
+    btnDelete.disabled = true
+    btnExport.disabled = true
+    btnLock.disabled = true
+    btnUnlock.disabled = false
+
+    const makeToggleLock = (locked) => () => {
+      btnLock.disabled = ! btnLock.disabled
+      btnUnlock.disabled = ! btnUnlock.disabled
+      this.dispatchEvent(new DashboardLayoutLockedEvent(locked))
     }
 
-    this.dom.btnDelete.disabled = true
-    this.dom.btnExport.disabled = true
-
-    this.dom.btnLock.disabled = true // locked at start
-    this.dom.btnUnlock.disabled = false
-
-    this.dom.btnLock.addEventListener('click', () => {
-      this.dom.btnLock.disabled = ! this.dom.btnLock.disabled
-      this.dom.btnUnlock.disabled = ! this.dom.btnUnlock.disabled
-      this.dispatchEvent(new DashboardLayoutLockedEvent(true)) //
-    })
-
-    this.dom.btnUnlock.addEventListener('click', () => {
-      this.dom.btnLock.disabled = ! this.dom.btnLock.disabled
-      this.dom.btnUnlock.disabled = ! this.dom.btnUnlock.disabled
-      this.dispatchEvent(new DashboardLayoutLockedEvent(false))
-    })
+    btnLock.addEventListener('click', makeToggleLock(true))
+    btnUnlock.addEventListener('click', makeToggleLock(false))
   }
 }
 
