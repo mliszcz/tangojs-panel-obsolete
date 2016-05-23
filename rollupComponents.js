@@ -14,6 +14,7 @@ const FORMAT = 'iife'
 const EXTERNAL_MODULES = [
   'window',
   'jQuery',
+  'tag',
   'tangojs-core',
   'tangojs-web-components',
   'app'
@@ -22,8 +23,9 @@ const EXTERNAL_MODULES = [
 const GLOBALS = {
   'window': 'window',
   'jQuery': 'window.$',
-  'tangojs-core': 'tangojs.core',
-  'tangojs-web-components': 'tangojs.web',
+  'tag': 'window.tag',
+  'tangojs-core': 'window.tangojs.core',
+  'tangojs-web-components': 'window.tangojs.web',
   'app': 'tjp'
 }
 

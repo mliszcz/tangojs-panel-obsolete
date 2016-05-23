@@ -27,22 +27,22 @@ function areCapabilitiesSupported (descriptor, requiredCapabilities) {
 }
 
 /**
- * Creates attribute map with sane values.
- * @param {tango.components.util.ComponentDescriptor} descriptor
- * @return {Map<string,Object>}
+ * @param {HTMLElement} node
+ * @param {string} name
+ * @param {Function} type
+ * @param {*} value
  */
-function buildDefaultAttributes (descriptor) {
-  return Object.keys(descriptor.attributes).reduce((acc, attribute) => {
-    if (attribute === 'poll-period') {
-      acc[attribute] = 1000
-    } else if (attribute.startsWith('show-')) {
-      acc[attribute] = true
+function setAttribute (node, name, type, value) {
+  if (type === Boolean) {
+    if (value === true) {
+      node.setAttribute(name, '')
     } else {
-      // fall-back to default attribute defined in component
-      // acc[attribute] = getDefaultValue(descriptor.attributes[attribute].type)
+      node.removeAttribute(name)
     }
-    return acc
-  }, {})
+  } else {
+    const convert = getConvertToAttribute(type)
+    node.setAttribute(name, convert(value))
+  }
 }
 
 /**
@@ -82,14 +82,10 @@ export default class WidgetFactoryService {
       return undefined
     }
 
-    const attributes
-      = Object.assign({}, buildDefaultAttributes(descriptor), attributeMap)
-
     const component = document.createElement(descriptor.tagName)
 
-    Object.entries(attributes).forEach(([name, value]) => {
-      const convert = getConvertToAttribute(descriptor.attributes[name].type)
-      component.setAttribute(name, convert(value))
+    Object.entries(attributeMap).forEach(([name, value]) => {
+      setAttribute(component, name, descriptor.attributes[name].type, value)
     })
 
     if (content) {

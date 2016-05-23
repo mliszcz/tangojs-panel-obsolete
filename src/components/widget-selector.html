@@ -4,16 +4,16 @@
     <div is="x-modal-window"
          url-bootstrap-css="node_modules/bootstrap/dist/css/bootstrap.css"
          class="fade"
-         text-header="My Form"
+         text-header="New widget"
          text-button-accept="Create"
          text-button-reject="Close">
-      <form>
-        <div class="form-group row">
-          <label class="col-sm-2">Type</label>
-          <div class="col-sm-6"></div>
-          <div class="col-sm-4"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4" data-id="models"></div>
+          <div class="col-sm-4" data-id="components"></div>
+          <div class="col-sm-4" data-id="attributes"></div>
         </div>
-      </form>
+      </div>
     </div>
   </template>
 

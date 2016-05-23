@@ -118,7 +118,7 @@ class AppMainElement extends HTMLDivElement {
       })
 
     this.dom.widgetSelector
-      .showModal(avalilableComponentDescriptors)
+      .showModal(models, avalilableComponentDescriptors)
       .then(([descriptor, attributeMap]) => {
 
         if (! this.currentDashboard) {

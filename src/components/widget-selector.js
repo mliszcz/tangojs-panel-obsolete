@@ -1,33 +1,137 @@
 
 import { document, HTMLDivElement } from 'window'
+import tag from 'tag'
 import app from 'app'
+
+const FORM_COMPONENTS_NAME = 'component'
 
 const template = app.util.getCurrentDocument().querySelector('template')
 
-function createRadioEntryForComponent (tag, description) {
+/**
+ * @param {HTMLElement} node
+ */
+function removeAllChildren (node) {
+  while (node.hasChildNodes()) {
+    node.removeChild(node.firstChild)
+  }
+}
 
-  const div = document.createElement('div')
-  div.classList.add('radio')
+/**
+ * @param {Object} dom
+ * @param {HTMLElement} dom.models
+ * @param {HTMLElement} dom.components
+ * @param {HTMLElement} dom.attributes
+ */
+function resetView (dom) {
+  removeAllChildren(dom.models)
+  removeAllChildren(dom.components)
+  removeAllChildren(dom.attributes)
+}
 
-  const label = document.createElement('label')
+/**
+ * @param {string[]} models
+ * @return {DocumentFragment}
+ */
+function createModelsView (models) {
+  return tag('ul', { class: 'list-unstyled' }, models.map(m => tag('li', m)))
+}
 
-  const input = document.createElement('input')
-  input.setAttribute('type', 'radio')
-  input.setAttribute('name', 'widget')
-  input.setAttribute('value', tag)
+/**
+ * @param {Object[]} descriptors
+ * @return {HTMLFormElement}
+ */
+function createComponentsForm (descriptors) {
+  return tag('form', descriptors.map(({ tagName, description }) => {
+    return createComponentsFormEntry(tagName, description)
+  }))
+}
 
-  const span = document.createElement('strong')
-  span.innerText = tag
+/**
+ * @param {string} tagName
+ * @param {string} description
+ * @return {HTMLElement}
+ */
+function createComponentsFormEntry (tagName,
+                                    description = 'no description provided') {
+  return tag('div', { class: 'radio' }, [
+    tag('label', [
+      tag('input', {
+        type: 'radio',
+        name: FORM_COMPONENTS_NAME,
+        value: tagName
+      }),
+      tag('strong', tagName)
+    ]),
+    tag('p', description)
+  ])
+}
 
-  const p = document.createElement('p')
-  p.innerText = description
+/**
+ * @param {Object[]} descriptors
+ * @return {Map<string, HTMLFormElement>}
+ */
+function createAttributesForms (descriptors) {
+  return descriptors.reduce((map, descriptor) => {
+    map[descriptor.tagName] = createAttributesForm(descriptor)
+    return map
+  }, {})
+}
 
-  div.appendChild(label)
-  div.appendChild(p)
-  label.appendChild(input)
-  label.appendChild(span)
+/**
+ * @param {Object} descriptor
+ * @return {HTMLFormElement}
+ */
+function createAttributesForm (descriptor) {
 
-  return div
+  const entries = Object.entries(descriptor.attributes)
+    .filter(([name, { type }]) => name !== 'model' && isTypeSupported(type))
+
+  return tag('form', entries.map(([name, { type }]) => {
+    return tag('div', { class: 'form-group row' }, [
+      tag('label', {
+        for: `fi-${name}`,
+        class: 'col-sm-6 form-control-label'
+      }, name),
+      tag('div', { class: 'col-sm-6' }, [
+        tag('input', Object.assign({
+          type: getInputType(type),
+          class: 'form-control',
+          id: `fi-${name}`,
+          name: name
+        }, getInitialValue(name)))
+      ])
+    ])
+  }))
+}
+
+function isTypeSupported (type) {
+  return [String, Number, Boolean].includes(type)
+}
+
+function getInputType (type) {
+  switch (type) {
+    case String: return 'text'
+    case Number: return 'number'
+    case Boolean: return 'checkbox'
+  }
+}
+
+function getInitialValue (name) {
+  if (name === 'poll-period') {
+    return { value: 1000 }
+  } else if (name.startsWith('show-')) {
+    return { checked: true }
+  } else {
+    return {}
+  }
+}
+
+function extractValueFromNode (node, type) {
+  switch (type) {
+    case String: return node.value
+    case Number: return parseFloat(node.value)
+    case Boolean: return node.checked
+  }
 }
 
 class AppWidgetSelectorElement extends HTMLDivElement {
@@ -37,34 +141,21 @@ class AppWidgetSelectorElement extends HTMLDivElement {
     const clone = document.importNode(template.content, true)
     this.appendChild(clone)
 
+    /** @private */
     this.dom = {
       modal: this.querySelector('*[is="x-modal-window"]'),
       form: this.querySelector('form'),
-      selections: this.querySelector('.form-group > div:nth-child(2)'),
-      attributes: this.querySelector('.form-group > div:nth-child(3)')
+      models: this.querySelector('*[data-id="models"]'),
+      components: this.querySelector('*[data-id="components"]'),
+      attributes: this.querySelector('*[data-id="attributes"]')
     }
   }
 
-  displayAvailableComponentsForm (avalilableComponentDescriptors) {
-
-    const radios = this.dom.selections
-
-    while (radios.hasChildNodes()) {
-      radios.removeChild(radios.firstChild)
-    }
-
-    avalilableComponentDescriptors.forEach(descriptor => {
-
-      radios.appendChild(
-        createRadioEntryForComponent(descriptor.tagName,
-                                     descriptor.description))
-        // build attribute form, show on select
-    })
-    this.selectFirstRadio()
-  }
-
+  /**
+   * @private
+   */
   selectFirstRadio () {
-    const first = this.dom.selections.querySelector('input[type="radio"]')
+    const first = this.dom.components.querySelector('input[type="radio"]')
     if (first) {
       first.checked = true
       this.dom.modal.dom.btnAccept.disabled = false
@@ -77,20 +168,48 @@ class AppWidgetSelectorElement extends HTMLDivElement {
    * @param {Array<Object>} availableWidgets
    * @return {Promise<[string, Object]>}
    */
-  showModal (avalilableComponentDescriptors) {
-    this.displayAvailableComponentsForm(avalilableComponentDescriptors)
+  showModal (models, descriptors) {
+
+    resetView(this.dom)
+
+    this.dom.models.appendChild(createModelsView(models))
+
+    const componentsForm = createComponentsForm(descriptors)
+    const attributesForms = createAttributesForms(descriptors)
+
+    this.dom.components.appendChild(componentsForm)
+
+    const onComponentSelected = () => {
+      removeAllChildren(this.dom.attributes)
+      const selectedTag = componentsForm[FORM_COMPONENTS_NAME].value
+      const attributesForm = attributesForms[selectedTag]
+      if (attributesForm) {
+        this.dom.attributes.appendChild(attributesForm)
+      }
+    }
+
+    componentsForm.addEventListener('change', onComponentSelected)
+
+    this.selectFirstRadio()
+    onComponentSelected()
+
     return this.dom.modal.showModal(() => {
 
-      const tag = this.dom.form['widget'].value
-      const descriptor
-        = avalilableComponentDescriptors.find(x => x.tagName === tag)
+      const selectedTag = componentsForm[FORM_COMPONENTS_NAME].value
+      const descriptor = descriptors.find(x => x.tagName === selectedTag)
 
-      const attributeMap = {}
+      const attributeMap = Object.entries(descriptor.attributes)
+      .reduce((map, [attribute, { type }]) => {
+        const input = attributesForms[selectedTag].elements[attribute]
+        if (input) {
+          map[attribute] = extractValueFromNode(input, type)
+        }
+        return map
+      }, {})
 
-      // TODO show form to fill values
+      componentsForm.removeEventListener('change', onComponentSelected)
 
       return Promise.resolve([descriptor, attributeMap])
-
     })
   }
 }
