@@ -31,7 +31,7 @@ class AppTabsBarElement extends HTMLUListElement {
     tab.appendChild(a)
 
     jQuery(a).on('shown.bs.tab', () => {
-      this.dispatchEvent(new TabsBarTabActivatedEvent(key))
+      this.dispatchEvent(TabsBarTabActivatedEvent.create(key))
     })
 
     this.appendChild(tab)

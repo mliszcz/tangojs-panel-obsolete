@@ -55,7 +55,7 @@ class AppMainElement extends HTMLDivElement {
     this.dom.tabNavs.showFirst()
 
     this.dom.menu.addEventListener(SelectorModelSelectedEvent.EVENT_NAME,
-      (event) => { this.showWidgetSelector(event.models) })
+      (event) => { this.showWidgetSelector(event.detail.models) })
 
     // resize grid when tab becomes active
     this.dom.tabNavs.addEventListener(TabsBarTabActivatedEvent.EVENT_NAME,
@@ -77,7 +77,7 @@ class AppMainElement extends HTMLDivElement {
 
     this.dom.toolbar.addEventListener(DashboardLayoutLockedEvent.EVENT_NAME,
     (event) => {
-      if (event.locked) {
+      if (event.detail.locked) {
         this.classList.add('tjp-locked-layout')
         this.lockedLayout = true
       } else {

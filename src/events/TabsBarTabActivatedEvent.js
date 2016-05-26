@@ -3,26 +3,19 @@ import { CustomEvent } from 'window'
 
 const EVENT_NAME = 'tabs-bar-tab-activated'
 
-export default class TabsBarTabActivatedEvent extends CustomEvent {
+const TabsBarTabActivatedEvent = Object.freeze({
 
   /**
    * @param {string} key
    */
-  constructor (key) {
-    super(EVENT_NAME, { detail: { key } })
-  }
+  create (key) {
+    return new CustomEvent(EVENT_NAME, { detail: { key } })
+  },
 
   /**
    * @type {string}
    */
-  get key () {
-    return this.detail.key
-  }
+  EVENT_NAME
+})
 
-  /**
-   * @type {string}
-   */
-  static get EVENT_NAME () {
-    return EVENT_NAME
-  }
-}
+export default TabsBarTabActivatedEvent

@@ -3,26 +3,19 @@ import { CustomEvent } from 'window'
 
 const EVENT_NAME = 'app-dashboard-layout-locked'
 
-export default class DashboardLayoutLockedEvent extends CustomEvent {
+const DashboardLayoutLockedEvent = Object.freeze({
 
   /**
    * @param {boolean} locked
    */
-  constructor (locked) {
-    super(EVENT_NAME, { detail: { locked } })
-  }
-
-  /**
-   * @type {boolean}
-   */
-  get locked () {
-    return this.detail.locked === true
-  }
+  create (locked) {
+    return new CustomEvent(EVENT_NAME, { detail: { locked } })
+  },
 
   /**
    * @type {string}
    */
-  static get EVENT_NAME () {
-    return EVENT_NAME
-  }
-}
+  EVENT_NAME
+})
+
+export default DashboardLayoutLockedEvent

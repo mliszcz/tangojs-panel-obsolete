@@ -35,7 +35,7 @@ class AppLeftMenuElement extends HTMLDivElement {
 
       tree.clearSelections()
       disableButtons(true)
-      this.dispatchEvent(new SelectorModelSelectedEvent(models))
+      this.dispatchEvent(SelectorModelSelectedEvent.create(models))
     })
 
     btnReloadTree.addEventListener('click', () => {

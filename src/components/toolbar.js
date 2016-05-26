@@ -26,7 +26,7 @@ class AppToolbarElement extends HTMLDivElement {
     const makeToggleLock = (locked) => () => {
       btnLock.disabled = ! btnLock.disabled
       btnUnlock.disabled = ! btnUnlock.disabled
-      this.dispatchEvent(new DashboardLayoutLockedEvent(locked))
+      this.dispatchEvent(DashboardLayoutLockedEvent.create(locked))
     }
 
     btnLock.addEventListener('click', makeToggleLock(true))
