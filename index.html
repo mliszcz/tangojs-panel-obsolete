@@ -31,6 +31,7 @@
     <script src="node_modules/tangojs-core/lib/tangojs-core.js"></script>
     <script src="node_modules/tangojs-connector-local/lib/tangojs-connector-local.js"></script>
     <script src="node_modules/tangojs-connector-local/lib/demo-model.js"></script>
+    <script src="node_modules/tangojs-connector-mtango/lib/tangojs-connector-mtango.js"></script>
 
     <script src="node_modules/tangojs-web-components/dist/tangojs-web-components.js"></script>
 
@@ -60,8 +61,13 @@
     <script type="text/javascript">
       (function (window) {
         'use strict'
+
         const model = window.tangojsLocalDemoModel.createModel()
         const conn = new window.tangojs.connector.local.LocalConnector(model)
+
+        // const conn = new window.tangojs.connector.mtango.MTangoConnector(
+        //   'http://172.18.0.5:8080/rest/rc2', 'tango','tango')
+
         window.tangojs.core.setConnector(conn)
       })(window)
     </script>

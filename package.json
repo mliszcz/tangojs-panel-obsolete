@@ -33,6 +33,7 @@
     "material-design-icons": "^2.2.0",
     "tag": "^0.3.0",
     "tangojs-connector-local": "^0.4.0",
+    "tangojs-connector-mtango": "^0.4.0",
     "tangojs-core": "^0.4.0",
     "tangojs-web-components": "^0.4.0",
     "tether": "^1.3.0",
